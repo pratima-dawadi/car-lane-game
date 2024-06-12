@@ -17,6 +17,7 @@ export default function createLane() {
   var SCORE = 0;
   let isGameOver = false;
   let isGameStarted = false;
+  let highScore = parseInt(localStorage.getItem("highScore") || "0", 10);
 
   const playerCar = new Car(300, 650, 50, 100, "/car.png");
 
@@ -71,6 +72,12 @@ export default function createLane() {
       if (playerCar.collidesWith(obstacle)) {
         isGameOver = true;
 
+        //high score
+        if (SCORE > highScore) {
+          highScore = SCORE;
+          localStorage.setItem("highScore", highScore.toString());
+        }
+
         //On game over, reset the position of the obstacles
         for (let i = 0; i < obstacles.length; i++) {
           obstacles[i].y = getRandom(-800, 0);
@@ -86,6 +93,7 @@ export default function createLane() {
     playerCar.draw(ctx);
     ctx.font = "25px Arial";
     ctx.fillText(`Score: ${SCORE}`, 4, 20);
+    ctx.fillText(`High Score: ${highScore}`, 4, 50);
 
     //Keep drawing canvas until game is over
     if (!isGameOver) {
